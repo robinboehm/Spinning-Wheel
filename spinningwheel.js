@@ -1,25 +1,25 @@
 /**
- * 
+ *
  * Spinning Wheel
- * 
- * Based on origonal by cubiq, 
+ *
+ * Based on origonal by cubiq,
  * http://cubiq.org/spinning-wheel-on-webkit-for-iphone-ipod-touch/11
- * 
+ *
  * Changes to make a bit more cross browser compatible. Based on code in iScroll 4.
  * Also added a 'container' property to allow the spinner to be embeded within an element.
  * Updated CSS to make use of gradients and data urls to reduce extra requests
  *
  * Changes by Fred Cox
  * Copyright (c) 2011 Fred Cox, http://fedr.co/
- * 
+ *
  * Origonal by Matteo Spinelli
  * Copyright (c) 2009 Matteo Spinelli, http://cubiq.org/
- * 
+ *
  * Released under MIT license
  * http://cubiq.org/dropbox/mit-license.txt
- * 
+ *
  * Version 3.0 - Last updated: 2013.03.01
- * 
+ *
  */
 (function() {
 	var dummyStyle = document.createElement('div').style,
@@ -52,7 +52,7 @@
 		isAndroid = (/android/gi).test(navigator.appVersion),
 		isIDevice = (/iphone|ipad/gi).test(navigator.appVersion),
 		isTouchPad = (/hp-tablet/gi).test(navigator.appVersion),
-	
+
 		has3d = prefixStyle('perspective') in dummyStyle,
 		hasTouch = 'ontouchstart' in window && !isTouchPad,
 		hasTransform = vendor !== false,
@@ -77,7 +77,7 @@
 
 			return transitionEnd[vendor];
 		})(),
-		
+
 		// Helpers
 		translateZ = has3d ? ' translateZ(0)' : '',
 		SpinningWheel = {
@@ -97,7 +97,7 @@
 				this.lockScreen(e);
 				if (e.currentTarget.id == 'sw-cancel' || e.currentTarget.id == 'sw-done') {
 					this.tapDown(e);
-				} else if (e.currentTarget.id == 'sw-frame') {
+				} else {//if (e.currentTarget.id == 'sw-frame') {
 					this.scrollStart(e);
 				}
 			} else if (e.type == MOVE_EV) {
@@ -144,9 +144,10 @@
 			this.swWrapper.style.top = (this.container ? this.container.clientHeight : (window.innerHeight + window.pageYOffset)) + 'px';
 		},
 
+      // Hack PetrusApp to allow next screen
 		lockScreen: function (e) {
-			e.preventDefault();
-			e.stopPropagation();
+			//e.preventDefault();
+			//e.stopPropagation();
 		},
 
 
@@ -170,7 +171,7 @@
 		calculateSlotsWidth: function () {
 			var div = this.swSlots.getElementsByTagName('div');
 			for (var i = 0; i < div.length; i += 1) {
-				this.slotEl[i].slotWidth = div[i].offsetWidth;
+				this.slotEl[i].slotWidth = div[i].offsetWidth + 15;
 			}
 		},
 
@@ -184,7 +185,7 @@
 			div.id = 'sw-wrapper';
 			div.style.top = (this.container ? this.container.clientHeight : (window.innerHeight + window.pageYOffset)) + 'px';		// Place the SW down the actual viewing screen
 			div.style[transitionProperty] = hasTransform ? cssVendor + 'transform' : 'top left';
-			div.style[transitionDuration] = '400ms';
+			div.style[transitionDuration] = '1ms';
 			if(!hasTransform) {
 				div.style.position = 'absolute';
 			}
@@ -202,7 +203,7 @@
 				this.swFrame.style.background = 'url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAADXCAYAAAAwRYC4AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyRpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoTWFjaW50b3NoKSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo3MzExQUJGOTdBNzAxMUUyQTREQ0Y2NUVCQTI2RTQwNiIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDo3MzExQUJGQTdBNzAxMUUyQTREQ0Y2NUVCQTI2RTQwNiI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOjczMTFBQkY3N0E3MDExRTJBNERDRjY1RUJBMjZFNDA2IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjczMTFBQkY4N0E3MDExRTJBNERDRjY1RUJBMjZFNDA2Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+CK03FgAAASlJREFUeNpivH799n8GIGC5evUuA5jBwPAfxmAEs5gYoAAh9f8/uhQjI1Rq2bKFjCAGo5KC5h2oLoY/MMZv3CJwxi9SpPCIECP1izJd5Ln5NxGhgUcEk/EXgwGX+ocqlZaRBxH5D4/l//A4hUYlPqn//zFSAroUMdpJtJ0kNXArGAiqYeVRAbMYz51/ugklPQ8hBsvy5RcPDlnHf/nzuAccBUAcDkurr2CMDzDGVxjjJxFJ/R+Gmv+41fxHYTBD8X8YgwGFwYTCgPuCGeoBHAxi1EDKTGtrd7TUC0urzGzMbIxfP39iZIFZzAIzHTuDBYMBl2LFrYYVtwgmg40yEWIYrFRSTJIL8TAgweLr76cKji8FRR1o8kMqmhhRUzgwAhlRykw8UgABBgCFIa30CoPe0wAAAABJRU5ErkJggg==) repeat-x';
 				div.style.background = 'white';
 			}
-			
+
 			// Create HTML slot elements
 			for (l = 0; l < this.slotData.length; l += 1) {
 				// Create the slot
@@ -232,7 +233,7 @@
 
 				// Place the slot to its default position (if other than 0)
 				if (this.slotData[l].defaultValue) {
-					this.scrollToValue(l, this.slotData[l].defaultValue);	
+					this.scrollToValue(l, this.slotData[l].defaultValue);
 				}
 			}
 
@@ -273,6 +274,35 @@
 		 *
 		 */
 
+			removeEventListener: function(){
+			this.swWrapper.removeEventListener(TRNEND_EV, this, false);
+
+			this.swFrame.removeEventListener(START_EV, this, false);
+
+			document.getElementById('sw-cancel').removeEventListener(START_EV, this, false);
+			document.getElementById('sw-done').removeEventListener(START_EV, this, false);
+
+			document.removeEventListener(START_EV, this, false);
+			document.removeEventListener(MOVE_EV, this, false);
+			window.removeEventListener(RESIZE_EV, this, true);
+			window.removeEventListener('scroll', this, true);
+		},
+
+			reAddEventListener: function(){
+				document.addEventListener(START_EV, this, false);			// Prevent page scrolling
+				document.addEventListener(MOVE_EV, this, false);
+				document.addEventListener(END_EV, this, false);			// Prevent page scrolling
+				window.addEventListener(RESIZE_EV, this, true);		// Optimize SW on orientation change
+				window.addEventListener('scroll', this, true);				// Reposition SW on page scroll
+
+				// Cancel/Done buttons events
+				document.getElementById('sw-cancel').addEventListener(START_EV, this, false);
+				document.getElementById('sw-done').addEventListener(START_EV, this, false);
+
+				// Add scrolling to the slots
+				this.swFrame.addEventListener(START_EV, this, false);
+			},
+
 		destroy: function () {
 			this.swWrapper.removeEventListener(TRNEND_EV, this, false);
 
@@ -302,14 +332,8 @@
 
 		close: function () {
 			this.swWrapper.style[transitionTimingFunction] = 'ease-in';
-			if (hasTransform) {
-				this.swWrapper.style[transform] = 'translate(0, 0)' + translateZ;
-			}
-			else {
-				this.swWrapper.style.left = 0;
-				this.swWrapper.style.top = 0;
-			}
-			
+
+
 			this.swWrapper.addEventListener(TRNEND_EV, this, false);
 		},
 
@@ -395,13 +419,13 @@
 		scrollStart: function (e) {
 			// Find the clicked slot
 			var point = hasTouch ? e.touches[0] : e;
-			
+
 			var l = 0, p = this.swSlots;
 			while(p){
 				l += p.offsetLeft;
 				p = p.offsetParent;
 			}
-			
+
 			var xPos = point.pageX - l;	// Clicked position minus left offset (should be 11px)
 
 			// Find tapped slot
@@ -416,14 +440,16 @@
 			}
 
 			// If slot is readonly do nothing
-			if (this.slotData[this.activeSlot].style.match('readonly')) {
+			if (this.slotData[this.activeSlot] && this.slotData[this.activeSlot].style.match('readonly')) {
 				//this.swFrame.removeEventListener(MOVE_EV, this, false);
 				//this.swFrame.removeEventListener(END_EV, this, false);
 				return false;
 			}
 
-			this.slotEl[this.activeSlot].removeEventListener(TRNEND_EV, this, false);	// Remove transition event (if any)
-			this.slotEl[this.activeSlot].style[transitionDelay] = '0';                 // Remove any residual transition
+            if (this.slotData[this.activeSlot]) {
+                this.slotEl[this.activeSlot].removeEventListener(TRNEND_EV, this, false);	// Remove transition event (if any)
+                this.slotEl[this.activeSlot].style[transitionDelay] = '0';                 // Remove any residual transition
+            }
 
 			// Stop and hold slot position
 			//var theTransform = window.getComputedStyle(this.slotEl[this.activeSlot])[vendor + 'Transform'];
@@ -433,14 +459,16 @@
 			//}
 
 			this.startY = point.pageY;
-			this.scrollStartY = this.slotEl[this.activeSlot].slotYPosition;
+            if (this.slotData[this.activeSlot]) {
+                this.scrollStartY = this.slotEl[this.activeSlot].slotYPosition;
+            }
 			this.scrollStartTime = e.timeStamp;
 
 			//this.swFrame.addEventListener(MOVE_EV, this, false);
 			//this.swFrame.addEventListener(END_EV, this, false);
-			
+
 			this.scrollHasStarted = true;
-			
+
 			return true;
 		},
 
@@ -448,7 +476,7 @@
 			var point = hasTouch ? e.touches[0] : e;
 			var topDelta = point.pageY - this.startY;
 
-			if (this.slotEl[this.activeSlot].slotYPosition > 0 || this.slotEl[this.activeSlot].slotYPosition < this.slotEl[this.activeSlot].slotMaxScroll) {
+			if (this.slotEl[this.activeSlot] && this.slotEl[this.activeSlot].slotYPosition > 0 || this.slotEl[this.activeSlot] && this.slotEl[this.activeSlot].slotYPosition < this.slotEl[this.activeSlot].slotMaxScroll) {
 				topDelta /= 2;
 			}
 
@@ -465,7 +493,7 @@
 		scrollEnd: function (e) {
 			//this.swFrame.removeEventListener(MOVE_EV, this, false);
 			//this.swFrame.removeEventListener(END_EV, this, false);
-			
+
 			this.scrollHasStarted = false;
 
 			// If we are outside of the boundaries, let's go back to the sheepfold
@@ -607,7 +635,7 @@
 			return true;
 		}
 	};
-	
+
 	function prefixStyle (style) {
 		if ( vendor === '' ) return style;
 
@@ -616,6 +644,6 @@
 	}
 
 	dummyStyle = null;	// for the sake of it
-	
+
 	window.SpinningWheel = SpinningWheel;
 })();
